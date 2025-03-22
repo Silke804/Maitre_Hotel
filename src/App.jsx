@@ -1,35 +1,71 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import Table from './components/Tables/Table';
+import TableModal from './components/Tables/TableModal';
+import { tables as initialTableData } from './data/tables';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [selectedTable, setSelectedTable] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tables, setTables] = useState(
+    Object.keys(initialTableData).map(key => ({
+      number: key,
+      size: initialTableData[key].size || 2, // Use explicit size
+      status: initialTableData[key].status || 'free',
+      data: initialTableData[key],
+      icons: []
+    }))
+  );
+
+  const handleTableClick = (tableNumber) => {
+    setSelectedTable(tables.find(t => t.number === tableNumber));
+    setIsModalOpen(true);
+  };
+
+  const handleCheckout = () => {
+    setTables(tables.map(t => 
+      t.number === selectedTable.number ? { ...t, status: 'free' } : t
+    ));
+    setIsModalOpen(false);
+  };
+
+  const handleIconChange = (icon, isChecked) => {
+    setTables(tables.map(t => 
+      t.number === selectedTable.number 
+        ? {
+            ...t,
+            icons: isChecked 
+              ? [...t.icons, icon]
+              : t.icons.filter(i => i !== icon)
+          }
+        : t
+    ));
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="dashboard">
+      <div className="tables-grid">
+        {tables.map(table => (
+          <Table
+            key={table.number}
+            number={table.number}
+            size={table.size}
+            status={table.status}
+            isNew={table.isNew}
+            onTableClick={handleTableClick}
+          />
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+
+      <TableModal
+        isOpen={isModalOpen}
+        tables={selectedTable}
+        status={selectedTable?.status}
+        onClose={() => setIsModalOpen(false)}
+        onCheckout={handleCheckout}
+        onIconChange={handleIconChange}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;
