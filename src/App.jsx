@@ -1,7 +1,11 @@
-import { useState } from 'react';
-import Table from './components/Tables/Table';
-import TableModal from './components/Tables/TableModal';
+import React, { useState, useEffect  } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import AppRoutes from './Routes'; // Import the routing configuration
 import { tables as initialTableData } from './data/tables';
+import { initialOrders } from './data/orders';
+import ErrorBoundary from './utils/ErrorBoundary';
+import './assets/styles/App.css';
+import './assets/styles/OrderPopup.css';
 
 function App() {
   const [selectedTable, setSelectedTable] = useState(null);
@@ -9,62 +13,119 @@ function App() {
   const [tables, setTables] = useState(
     Object.keys(initialTableData).map(key => ({
       number: key,
-      size: initialTableData[key].size || 2, // Use explicit size
+      size: initialTableData[key].size || 2,
       status: initialTableData[key].status || 'free',
       data: initialTableData[key],
-      icons: []
+      icons: [],
+    }))
+  );
+  const [bills, setBills] = useState(
+    Object.keys(initialOrders).map(key => ({
+      number: key,
+      tableNumber: initialOrders[key].tableNumber,
+      status: initialOrders[key].status,
+      total: initialOrders[key].total,
+      time: initialOrders[key].time,
+      items: initialOrders[key].items,
+      data: initialOrders[key],
     }))
   );
 
-  const handleTableClick = (tableNumber) => {
+  useEffect(() => {
+    console.log('Tables state updated:', tables);
+  }, [tables]);
+
+  const handleTableClick = tableNumber => {
     setSelectedTable(tables.find(t => t.number === tableNumber));
     setIsModalOpen(true);
   };
 
   const handleCheckout = () => {
-    setTables(tables.map(t => 
+    if (!selectedTable) return;
+  
+    const calculatedTotal = selectedTable.data.orders.reduce(
+      (sum, order) => sum + (order.price * order.quantity),
+      0
+    );
+  
+    const newBill = {
+      id: Date.now() + Math.random(),
+      tableNumber: selectedTable.number,
+      total: calculatedTotal, // Use calculated total
+      status: 'paid',
+      time: new Date().toLocaleTimeString('nl-NL', {
+        hour: '2-digit',
+        minute: '2-digit'
+      }),
+      items: selectedTable.data.orders.map(order => ({
+        name: order.item,
+        price: order.price,
+        quantity: order.quantity
+      }))
+    };
+  
+    setTables(tables.map(t =>
       t.number === selectedTable.number ? { ...t, status: 'free' } : t
     ));
+    setBills([...bills, newBill]);
     setIsModalOpen(false);
   };
 
+  const handleOrderSubmit = (tableNumber, items) => {
+    setTables(prevTables => 
+      prevTables.map(table => 
+        table.number === tableNumber ? {
+          ...table,
+          data: {
+            ...table.data,
+            // Ensure orders exists and is an array
+            orders: [...(table.data.orders || []), ...items]
+          },
+          status: 'occupied',
+          icons: [...(table.icons || []), '📝']
+        } : table
+      )
+    );
+  };
+  
+
   const handleIconChange = (icon, isChecked) => {
-    setTables(tables.map(t => 
-      t.number === selectedTable.number 
-        ? {
-            ...t,
-            icons: isChecked 
-              ? [...t.icons, icon]
-              : t.icons.filter(i => i !== icon)
-          }
-        : t
-    ));
+    setTables(prevTables =>
+      prevTables.map(t =>
+        t.number === selectedTable.number
+          ? {
+              ...t,
+              icons: isChecked
+                ? [...t.icons, icon]
+                : t.icons.filter(i => i !== icon),
+            }
+          : t
+      )
+    );
+  };
+  
+
+  const countBirthdays = () => {
+    return tables.filter((table) => table.icons.includes('🎂')).length;
   };
 
   return (
-    <div className="dashboard">
-      <div className="tables-grid">
-        {tables.map(table => (
-          <Table
-            key={table.number}
-            number={table.number}
-            size={table.size}
-            status={table.status}
-            isNew={table.isNew}
-            onTableClick={handleTableClick}
-          />
-        ))}
-      </div>
-
-      <TableModal
-        isOpen={isModalOpen}
-        tables={selectedTable}
-        status={selectedTable?.status}
-        onClose={() => setIsModalOpen(false)}
-        onCheckout={handleCheckout}
-        onIconChange={handleIconChange}
-      />
-    </div>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AppRoutes
+          tables={tables}
+          bills={bills}
+          setBills={setBills}
+          onTableClick={handleTableClick}
+          isModalOpen={isModalOpen}
+          selectedTable={selectedTable}
+          onClose={() => setIsModalOpen(false)}
+          onCheckout={handleCheckout}
+          onIconChange={handleIconChange}
+          onOrderSubmit={handleOrderSubmit}
+        />
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 
