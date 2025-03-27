@@ -5,12 +5,10 @@ import { menuItems } from '../data/menuItems';
 const MenuPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Flatten the items array while keeping track of the category name.
-  const allItems = menuItems.flatMap(category =>
-    category.items.map(item => ({ ...item, categoryName: category.name }))
-  );
+  // Use the flat menuItems array directly.
+  const allItems = menuItems;
 
-  // Filter items based on searchTerm
+  // Filter items based on the search term.
   const filteredItems = allItems.filter(item =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.description.toLowerCase().includes(searchTerm.toLowerCase())
@@ -32,8 +30,7 @@ const MenuPage = () => {
       </div>
       <div className="menu-grid">
         {filteredItems.map(item => (
-          // Combine categoryName with id to ensure uniqueness
-          <MenuItem key={`${item.categoryName}-${item.id}`} item={item} />
+          <MenuItem key={item.id} item={item} />
         ))}
       </div>
     </div>
