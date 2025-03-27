@@ -1,0 +1,29 @@
+.order-section {
+    background: var(--background);
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-md);
+  }
+  
+  .order {
+    background: var(--light);
+    padding: var(--spacing-md);
+    border-radius: 8px;
+    margin-bottom: var(--spacing-sm);
+    transition: all 0.2s ease;
+  }
+  
+  .order:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  /* Order Popup Styling */
+  .order-btn {
+    background: #3498db;
+    color: white;
+  }
+  
+  .order-btn:hover {
+    background: #2980b9;
+  }

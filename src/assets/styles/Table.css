@@ -1,0 +1,139 @@
+/* Table Card */
+
+.table {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 3px solid;
+}
+
+
+/* Status Colors */
+
+.table.free {
+    border-color: #2ecc71;
+    background: linear-gradient(145deg, #f0fdf4, #ffffff);
+}
+
+.table.occupied {
+    border-color: #e74c3c;
+    background: linear-gradient(145deg, #fef2f2, #ffffff);
+}
+
+.table.reserved {
+    border-color: #f59e0b;
+    background: linear-gradient(145deg, #fffbeb, #ffffff);
+}
+
+
+/* Hover Effects */
+
+.table:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Table Number */
+
+.number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.number::before {
+    content: '🍽️';
+    font-size: 1.2em;
+}
+
+
+/* Status Info */
+
+.occupied-info {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+
+.orders-badge {
+    background: #e67e22;
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+
+/* Icons Container */
+
+
+/* Replace .icon styles with */
+
+.icon-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 2;
+}
+
+.icon {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.icon:hover {
+    transform: scale(1.2);
+}
+
+
+/* Remove background from existing .icon styles */
+
+.icon {
+    background: transparent !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+}
+
+
+/* Size Indicator */
+
+.size-indicator {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background: rgba(0, 0, 0, 0.08);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.size-indicator::before {
+    content: '👥';
+}
