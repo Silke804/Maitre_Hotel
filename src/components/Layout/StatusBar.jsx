@@ -1,17 +1,19 @@
 import React from 'react';
 
-const StatusBar = ({ tables }) => {
+const StatusBar = ({ tables, orders }) => {
+  // Occupied tables count
   const occupiedCount = tables.filter(table => table.status === 'occupied').length;
   const totalTables = tables.length;
 
-  const ordersInPreparation = tables.reduce((total, table) => {
-    if (table.status === 'occupied' && table.data.orders && Array.isArray(table.data.orders)) {
-      return total + table.data.orders.length;
-    }
-    return total;
-  }, 0);
+  // Orders in preparation (status: pending/preparing)
+  const ordersInPreparation = orders.filter(order => 
+    ['pending', 'preparing'].includes(order.status)
+  ).length;
 
-  const birthdaysToday = tables.filter((table) => table.icons.includes('🎂')).length;
+  // Birthdays (using table notes instead of icons)
+  const birthdaysToday = tables.filter(table => 
+    table.notes?.toLowerCase().includes('verjaardag')
+  ).length;
 
   return (
     <div className="status-bar">
@@ -19,10 +21,10 @@ const StatusBar = ({ tables }) => {
         <span>🪑 Bezet: {occupiedCount}/{totalTables}</span>
       </div>
       <div className="status-item">
-        <span>⏳ Wachtende bestellingen: {ordersInPreparation}</span>
+        <span>⏳ Orders in bewerking: {ordersInPreparation}</span>
       </div>
       <div className="status-item">
-        <span>🎂 Verjaardagen vandaag: {birthdaysToday}</span>
+        <span>🎂 Verjaardagen: {birthdaysToday}</span>
       </div>
     </div>
   );
