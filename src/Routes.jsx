@@ -8,6 +8,8 @@ import MenuPage from './pages/MenuPage';
 
 const AppRoutes = ({
   tables,
+  orders,       // Added new prop
+  menuItems,    // Added new prop
   bills,
   setBills,
   onTableClick,
@@ -20,17 +22,13 @@ const AppRoutes = ({
 }) => {
   return (
     <Routes>
-      <Route
-        element={
-          <DashboardLayout
-            tables={tables}
-          />
-        }>
+      <Route element={<DashboardLayout tables={tables} orders={orders} />}>
         <Route
           index
           element={
             <TablesPage
               tables={tables}
+              orders={orders}
               onTableClick={onTableClick}
               isModalOpen={isModalOpen}
               selectedTable={selectedTable}
@@ -46,6 +44,7 @@ const AppRoutes = ({
           element={
             <TablesPage
               tables={tables}
+              orders={orders}
               onTableClick={onTableClick}
               isModalOpen={isModalOpen}
               selectedTable={selectedTable}
@@ -56,12 +55,24 @@ const AppRoutes = ({
             />
           }
         />
-        <Route path="orders" element={<OrdersPage tables={tables} />} />
+        <Route 
+          path="orders" 
+          element={
+            <OrdersPage 
+              tables={tables}
+              orders={orders}       // Added
+              menuItems={menuItems} // Added
+            />
+          }
+        />
         <Route
           path="bills"
           element={<BillsPage bills={bills} setBills={setBills} />}
         />
-        <Route path="menu" element={<MenuPage />} />
+        <Route 
+          path="menu" 
+          element={<MenuPage menuItems={menuItems} />} // Added menuItems
+        />
         <Route path="*" element={<Navigate to="/tables" replace />} />
       </Route>
     </Routes>
