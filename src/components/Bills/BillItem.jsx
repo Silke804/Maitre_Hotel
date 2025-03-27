@@ -1,17 +1,21 @@
+import React from 'react';
+import { formatTime } from '../../utils/helpers';
+
 const BillItem = ({ bill, onDelete }) => {
   const total = typeof bill.total === 'number' ? bill.total : Number(bill.total);
+  console.log("bill timestamp = " + bill.timestamp);
 
   return (
     <div className={`bill-item ${bill.status}`}>
       <div className="bill-header">
-        <h3>Tafel {bill.tableNumber}</h3>
+        <h3>Tafel {bill.tableId}</h3>
         <span className={`bill-status ${bill.status}`}>
           {bill.status}
         </span>
       </div>
       <div className="bill-details">
         <p className="bill-time">
-          <i className="fas fa-clock"></i> {bill.time}
+          <i className="fas fa-clock"></i> {formatTime(bill.timestamp)}
         </p>
         <p className="bill-total">
           €{total.toFixed(2)}

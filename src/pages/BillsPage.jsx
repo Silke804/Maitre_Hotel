@@ -6,9 +6,9 @@ const BillsPage = ({ bills, setBills }) => {
     <div className="bills-page">
       <h2 className="page-title">Rekeningen</h2>
       <div className="bills-list">
-        {bills.map((bill, index) => (
+        {bills.map((bill) => (
           <BillItem
-            key={`${bill.id}-${index}`}
+            key={bill.id}
             bill={bill}
             onDelete={() => setBills(bills.filter(b => b.id !== bill.id))}
           />
