@@ -1,131 +1,134 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import AppRoutes from './Routes'; // Import the routing configuration
+import AppRoutes from './Routes';
 import { tables as initialTableData } from './data/tables';
 import { initialOrders } from './data/orders';
+import { initialBills } from './data/bills';
+import { menuItems } from './data/menuItems';
 import ErrorBoundary from './utils/ErrorBoundary';
+import { NotificationsProvider,useNotifications  } from './contexts/NotificationsContext';
+import { v4 as uuid } from 'uuid';
 import './assets/styles/App.css';
 import './assets/styles/OrderPopup.css';
 
-function App() {
+function AppContent() {
+  const { addNotification } = useNotifications(); // Now this works correctly
   const [selectedTable, setSelectedTable] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [orders, setOrders] = useState(initialOrders);
+
   const [tables, setTables] = useState(
-    Object.keys(initialTableData).map(key => ({
-      number: key,
-      size: initialTableData[key].size || 2,
-      status: initialTableData[key].status || 'free',
-      data: initialTableData[key],
-      icons: [],
+    initialTableData.map(table => ({
+      ...table,
+      // Ensure that icons exists even if empty
+      icons: table.icons || [],
     }))
   );
+
   const [bills, setBills] = useState(
-    Object.keys(initialOrders).map(key => ({
-      number: key,
-      tableNumber: initialOrders[key].tableNumber,
-      status: initialOrders[key].status,
-      total: initialOrders[key].total,
-      time: initialOrders[key].time,
-      items: initialOrders[key].items,
-      data: initialOrders[key],
+    initialBills.map(bill => ({
+      ...bill,
     }))
   );
 
-  useEffect(() => {
-    console.log('Tables state updated:', tables);
-  }, [tables]);
-
-  const handleTableClick = tableNumber => {
-    setSelectedTable(tables.find(t => t.number === tableNumber));
+  const handleTableClick = tableId => {
+    setSelectedTable(tables.find(t => t.id === tableId));
     setIsModalOpen(true);
   };
 
-  const handleCheckout = () => {
-    if (!selectedTable) return;
-  
-    const calculatedTotal = selectedTable.data.orders.reduce(
-      (sum, order) => sum + (order.price * order.quantity),
-      0
-    );
-  
+  const handleCheckout = tableId => {
+    const tableOrders = orders.filter(o => o.tableId === tableId);
+    const total = tableOrders.reduce((sum, order) => sum + order.total, 0);
+
     const newBill = {
-      id: Date.now() + Math.random(),
-      tableNumber: selectedTable.number,
-      total: calculatedTotal, // Use calculated total
+      id: uuid(),
+      tableId,
+      orderIds: tableOrders.map(o => o.id),
+      total,
+      paymentMethod: 'cash',
       status: 'paid',
-      time: new Date().toLocaleTimeString('nl-NL', {
-        hour: '2-digit',
-        minute: '2-digit'
-      }),
-      items: selectedTable.data.orders.map(order => ({
-        name: order.item,
-        price: order.price,
-        quantity: order.quantity
-      }))
+      timestamp: new Date().toISOString(),
     };
-  
-    setTables(tables.map(t =>
-      t.number === selectedTable.number ? { ...t, status: 'free' } : t
-    ));
+
     setBills([...bills, newBill]);
+    setTables(tables.map(t =>
+      t.id === tableId ? {
+        ...t,
+        status: 'free',
+        timestamp: '',       // Reset timestamp
+        notes: '',           // Reset notes
+        orders: []           // Clear orders
+      } : t
+    ));
     setIsModalOpen(false);
   };
 
-  const handleOrderSubmit = (tableNumber, items) => {
-    setTables(prevTables => 
-      prevTables.map(table => 
-        table.number === tableNumber ? {
-          ...table,
-          data: {
-            ...table.data,
-            // Ensure orders exists and is an array
-            orders: [...(table.data.orders || []), ...items]
-          },
-          status: 'occupied',
-          icons: [...(table.icons || []), '📝']
-        } : table
+
+  const handleOrderSubmit = (tableId, newOrders) => {
+    addNotification(`New order received for Table ${tableId}`);
+    setOrders(prev => [...prev, ...newOrders]);
+
+    setTables(prevTables =>
+      prevTables.map(table =>
+        table.id === tableId
+          ? {
+            ...table,
+            status: 'occupied',
+            icons: [...new Set([...table.icons, '📝'])],
+          }
+          : table
       )
     );
   };
-  
 
-  const handleIconChange = (icon, isChecked) => {
+  const handleIconChange = (tableId, icon, isChecked) => {
     setTables(prevTables =>
       prevTables.map(t =>
-        t.number === selectedTable.number
+        t.id === tableId
           ? {
-              ...t,
-              icons: isChecked
-                ? [...t.icons, icon]
-                : t.icons.filter(i => i !== icon),
-            }
+            ...t,
+            icons: isChecked
+              ? [...new Set([...t.icons, icon])] // Ensure unique
+              : t.icons.filter(i => i !== icon)
+          }
           : t
       )
     );
   };
-  
 
   const countBirthdays = () => {
-    return tables.filter((table) => table.icons.includes('🎂')).length;
+    return tables.filter(table => table.icons.includes('🎂')).length;
   };
 
   return (
-    <ErrorBoundary>
-      <BrowserRouter>
-        <AppRoutes
-          tables={tables}
-          bills={bills}
-          setBills={setBills}
-          onTableClick={handleTableClick}
-          isModalOpen={isModalOpen}
-          selectedTable={selectedTable}
-          onClose={() => setIsModalOpen(false)}
-          onCheckout={handleCheckout}
-          onIconChange={handleIconChange}
-          onOrderSubmit={handleOrderSubmit}
-        />
-      </BrowserRouter>
-    </ErrorBoundary>
+      <ErrorBoundary>
+        <BrowserRouter>
+          <AppRoutes
+            tables={tables}
+            orders={orders}
+            menuItems={menuItems}
+            bills={bills}
+            setBills={setBills}
+            onTableClick={handleTableClick}
+            isModalOpen={isModalOpen}
+            selectedTable={selectedTable}
+            onClose={() => setIsModalOpen(false)}
+            onCheckout={handleCheckout}
+            onIconChange={handleIconChange}
+            onOrderSubmit={handleOrderSubmit}
+            countBirthdays={countBirthdays}
+          />
+        </BrowserRouter>
+      </ErrorBoundary>
+  );
+}
+
+// Main App component that provides the context
+function App() {
+  return (
+    <NotificationsProvider>
+      <AppContent />
+    </NotificationsProvider>
   );
 }
 
