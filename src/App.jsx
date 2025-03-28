@@ -142,7 +142,6 @@ function AppContent() {
 
   const handleOrderSubmit = (tableId, newOrders) => {
     addNotification(`New order received for Table ${tableId}`);
-    const table = tables.find(t => t.id === tableId);
 
     setOrders(prev => [...prev, ...newOrders]);
 
