@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { formatTime } from '../../utils/helpers';
 
+
 const BillItem = ({ bill, onDelete }) => {
   return (
     <div className={`bill-item ${bill.status}`}>
