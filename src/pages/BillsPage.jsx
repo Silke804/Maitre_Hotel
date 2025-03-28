@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import BillItem from '../components/Bills/BillItem';
 
-const BillsPage = ({ bills, setBills}) => {
+const BillsPage = ({ bills, setBills }) => {
   return (
     <div className="bills-page">
       <h2 className="page-title">Rekeningen</h2>

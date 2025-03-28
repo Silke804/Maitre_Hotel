@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import AppRoutes from './Routes';
 import { tables as initialTableData } from './data/tables';
 import { initialOrders } from './data/orders';
@@ -55,21 +55,21 @@ function AppContent() {
           status: newStatus,
           ...(newStatus === 'served' && { servedTime: new Date().toISOString() })
         };
-        
+
         // Check if all orders for this table are served
-        const tableOrders = prev.filter(o => 
+        const tableOrders = prev.filter(o =>
           o.tableId === order.tableId && o.id !== orderId
         );
-        
+
         if (newStatus === 'served' && tableOrders.every(o => o.status === 'served')) {
-          setTables(prevTables => prevTables.map(table => 
+          setTables(prevTables => prevTables.map(table =>
             table.id === order.tableId ? {
               ...table,
               icons: table.icons.filter(icon => icon !== '📝')
             } : table
           ));
         }
-        
+
         return updatedOrder;
       }
       return order;
@@ -143,32 +143,11 @@ function AppContent() {
   const handleOrderSubmit = (tableId, newOrders) => {
     addNotification(`New order received for Table ${tableId}`);
     const table = tables.find(t => t.id === tableId);
-  
-    const ordersWithStatus = newOrders.map(order => {
-      let orderNotes = order.note || [];
-  
-      // If the birthday icon is active, add the birthday tag
-      if (table && table.icons.includes('🎂') && !orderNotes.includes('verjaardag')) {
-        orderNotes.push('verjaardag');
-      }
-      // If the allergy icon is active, add the allergy tag
-      if (table && table.icons.includes('⚠️') && !orderNotes.includes('allergie')) {
-        orderNotes.push('allergie');
-      }
-  
-      return {
-        ...order,
-        tableId: tableId,
-        status: 'pending',
-        note: orderNotes,
-      };
-    });
-  
-    
+
     setOrders(prev => [...prev, ...newOrders]);
-    
+
     // Automatically add '📝' icon if not present
-    setTables(prevTables => prevTables.map(table => 
+    setTables(prevTables => prevTables.map(table =>
       table.id === tableId ? {
         ...table,
         status: 'occupied',
@@ -199,7 +178,7 @@ function AppContent() {
 
   return (
     <ErrorBoundary>
-      <BrowserRouter>
+      <HashRouter >
         <AppRoutes
           tables={tables}
           orders={orders}
@@ -219,7 +198,7 @@ function AppContent() {
           onNotesChange={handleNotesChange}
           onUpdateStatus={handleUpdateStatus}
         />
-      </BrowserRouter>
+      </HashRouter >
     </ErrorBoundary>
   );
 }

@@ -1,4 +1,3 @@
-import { formatDuration } from '../../utils/helpers';
 import PropTypes from 'prop-types';
 import '../../assets/styles/TablesPage.css';
 import '../../assets/styles/Table.css';
