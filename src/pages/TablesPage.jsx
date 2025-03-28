@@ -11,7 +11,10 @@ const TablesPage = ({
   onClose,
   onCheckout,
   onIconChange,
-  onOrderSubmit
+  onOrderSubmit,
+  onStatusChange,
+  onTimestampChange,
+  onNotesChange
 }) => {
   return (
     <div className="tables-page">
@@ -39,8 +42,11 @@ const TablesPage = ({
           onCheckout={onCheckout}
           onIconChange={onIconChange}
           onOrderSubmit={onOrderSubmit}
+          onStatusChange={onStatusChange}
           tables={tables}
           tableId={selectedTable?.id}
+          onTimestampChange={onTimestampChange}
+          onNotesChange={onNotesChange}
         />
       )}
     </div>

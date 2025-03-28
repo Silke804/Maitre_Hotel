@@ -14,12 +14,14 @@ const TableModal = ({
   onCheckout,
   onIconChange,
   onOrderSubmit,
+  onStatusChange,
+  onTimestampChange,
+  onNotesChange,
   orders = []
 }) => {
   const navigate = useNavigate();
   const [showOrderPopup, setShowOrderPopup] = useState(false);
   const tableData = tables.find(t => t.id === tableId) || {};
-  console.log(JSON.stringify(tableData));
 
   if (!tableData || !isOpen) return null;
 
@@ -48,6 +50,10 @@ const TableModal = ({
     setShowOrderPopup(false);
   };
 
+  const handleStatusChange = (newStatus) => {
+    onStatusChange(tableId, newStatus);
+  };
+
 
   return (
     <div className="modal-overlay">
@@ -55,7 +61,20 @@ const TableModal = ({
         <div className="modal-header">
           <h2 className="modal-title">
             <span className="table-number">Tafel {id}</span>
-            <span className={`status-badge ${status}`}>{status}</span>
+            <div className="status-controls">
+              {['free', 'occupied', 'reserved'].map((statusOption) => (
+                <button
+                  key={statusOption}
+                  className={`status-pill ${status} ${status === statusOption ? 'active' : ''}`}
+                  onClick={() => handleStatusChange(statusOption)}
+                  disabled={status === statusOption}
+                >
+                  {statusOption === 'free' && 'Vrij'}
+                  {statusOption === 'occupied' && 'Bezet'}
+                  {statusOption === 'reserved' && 'Gereserveerd'}
+                </button>
+              ))}
+            </div>
           </h2>
           <button className="close-btn" onClick={onClose}>&times;</button>
         </div>
@@ -70,15 +89,30 @@ const TableModal = ({
             </div>
             <div className="info-item">
               <span className="info-label">Starttijd</span>
-              <span className="info-value">
-                <i className="fas fa-clock"></i> {formatTime(timestamp)}
-              </span>
+              <div className="info-value time-input-wrapper">
+                {status === 'reserved' ? (
+                  <input
+                    type="datetime-local"
+                    value={timestamp || ''}
+                    onChange={(e) => onTimestampChange(tableId, e.target.value)}
+                    className="compact-datetime-input"
+                  />
+                ) : (
+                  <div className="time-display">
+                    <i className="fas fa-clock"></i>
+                    {timestamp ? formatTime(timestamp) : 'Niet ingesteld'}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="info-item full-width">
               <span className="info-label">Opmerkingen</span>
-              <span className="info-value notes">
-                {notes || 'Geen opmerkingen'}
-              </span>
+              <textarea
+                value={notes || ''}
+                onChange={(e) => onNotesChange(tableId, e.target.value)}
+                className="notes-input"
+                placeholder="Voer opmerkingen in..."
+              />
             </div>
             <div className="order-summary">
               <h3>Huidige Bestelling ({totalItems} items)</h3>
@@ -150,12 +184,18 @@ TableModal.propTypes = {
   orders: PropTypes.array.isRequired,
   onIconChange: PropTypes.func.isRequired,
   onCheckout: PropTypes.func.isRequired,
+  onStatusChange: PropTypes.func.isRequired,
+  onTimestampChange: PropTypes.func.isRequired,
+  onNotesChange: PropTypes.func.isRequired,
 };
 
 TableModal.defaultProps = {
   onOrderSubmit: () => console.warn('onOrderSubmit prop not provided'),
   onIconChange: () => console.warn('onIconChange prop not provided'),
   onCheckout: () => console.warn('onCheckout prop not provided'),
+  onStatusChange: () => console.warn('onStatusChange prop not provided'),
+  onTimestampChange: () => console.warn('onTimestampChange prop not provided'),
+  onNotesChange: () => console.warn('onNotesChange prop not provided'),
 };
 
 export default TableModal;

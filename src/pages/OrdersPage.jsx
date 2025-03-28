@@ -1,11 +1,16 @@
-import React from 'react';
-import OrderGroup from '../components/Orders/OrderGroup';
+import React, { useState } from 'react';
+import OrderColumn from '../components/Orders/OrderColumn';
 import '../assets/styles/OrdersPage.css';
 
-const OrdersPage = ({ tables, orders, menuItems }) => {
+const OrdersPage = ({ orders, menuItems, onUpdateStatus }) => {
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
   const getMenuItemName = (id) => {
     const item = menuItems.find(m => m.id === id);
     return item?.name || 'Onbekend item';
+  };
+
+  const handleSelectOrder = (orderId) => {
+    setSelectedOrderId(orderId);
   };
 
   const formatTime = (isoString) => {
@@ -16,55 +21,63 @@ const OrdersPage = ({ tables, orders, menuItems }) => {
     });
   };
 
-  // Get occupied tables with actual orders
-  const occupiedTables = tables.filter(table =>
-    table.status === 'occupied' &&
-    orders.some(o => o.tableId === table.id)
-  );
+  // Categorize orders into different status groups
+  const categorizedOrders = orders.reduce((acc, order) => {
+    if (!acc[order.status]) acc[order.status] = [];
+    acc[order.status].push(order);
+    return acc;
+  }, { pending: [], preparing: [], served: [] });
+
+  // Sort orders by timestamp (oldest first for pending/preparing, newest first for served)
+  const sortedOrders = {
+    pending: [...categorizedOrders.pending].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)),
+    preparing: [...categorizedOrders.preparing].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)),
+    served: [...categorizedOrders.served].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+  };
 
   return (
     <div className="orders-page">
-      <h1 className="page-title">📋 Actieve Bestellingen</h1>
-
-      {occupiedTables.length === 0 ? (
-        <div className="empty-state">
-          <div className="empty-icon">📭</div>
-          <p>Geen actieve bestellingen</p>
-        </div>
-      ) : (
-        <div className="order-list">
-          {occupiedTables.map(table => {
-            const tableOrders = orders.filter(o => o.tableId === table.id);
-
-            return (
-              <div key={table.id} className="order-card">
-                <div className="table-header">
-                  <div className="table-meta">
-                    <span className="table-icon">🍽️</span>
-                    <h2 className="table-number">Tafel {table.id}</h2>
-                  </div>
-                  <span className="order-count">
-                    <span className="count">{tableOrders.length}</span>
-                    {tableOrders.length === 1 ? ' bestelling' : ' bestellingen'}
-                  </span>
-                </div>
-
-                <div className="order-groups">
-                  {['pending', 'preparing', 'served'].map(status => (
-                    <OrderGroup
-                      key={status}
-                      status={status}
-                      orders={tableOrders.filter(o => o.status === status)}
-                      getMenuItemName={getMenuItemName}
-                      formatTime={formatTime}
-                    />
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <h1 className="page-title">📋 Bestellingen Overzicht</h1>
+      
+      <div className="order-columns-container">
+        <OrderColumn
+          title="In de Keuken"
+          orders={sortedOrders.pending}
+          status="pending"
+          onSelectOrder={handleSelectOrder}
+          selectedOrderId={selectedOrderId}
+          getMenuItemName={getMenuItemName}
+          formatTime={formatTime}
+          onUpdateStatus={onUpdateStatus}
+          allowedNextStatus="preparing"
+          actionLabel="Markeer als Bereid 👨🍳"
+        />
+        
+        <OrderColumn
+          title="Klaar voor Ophalen"
+          orders={sortedOrders.preparing}
+          status="preparing"
+          onSelectOrder={handleSelectOrder}
+          selectedOrderId={selectedOrderId}
+          getMenuItemName={getMenuItemName}
+          formatTime={formatTime}
+          onUpdateStatus={onUpdateStatus}
+          allowedNextStatus="served"
+          actionLabel="Markeer als Geserveerd 🚀"
+        />
+        
+        <OrderColumn
+          title="Geserveerd"
+          orders={sortedOrders.served}
+          status="served"
+          onSelectOrder={handleSelectOrder}
+          selectedOrderId={selectedOrderId}
+          getMenuItemName={getMenuItemName}
+          formatTime={formatTime}
+          onUpdateStatus={onUpdateStatus}
+          showTableNumber={true}
+        />
+      </div>
     </div>
   );
 };

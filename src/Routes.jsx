@@ -8,8 +8,8 @@ import MenuPage from './pages/MenuPage';
 
 const AppRoutes = ({
   tables,
-  orders,       // Added new prop
-  menuItems,    // Added new prop
+  orders,
+  menuItems,
   bills,
   setBills,
   onTableClick,
@@ -19,26 +19,16 @@ const AppRoutes = ({
   onCheckout,
   onIconChange,
   onOrderSubmit,
+  onStatusChange,
+  onTimestampChange,
+  onNotesChange,
+  onUpdateStatus
 }) => {
   return (
     <Routes>
       <Route element={<DashboardLayout tables={tables} orders={orders} />}>
-        <Route
-          index
-          element={
-            <TablesPage
-              tables={tables}
-              orders={orders}
-              onTableClick={onTableClick}
-              isModalOpen={isModalOpen}
-              selectedTable={selectedTable}
-              onClose={onClose}
-              onCheckout={onCheckout}
-              onIconChange={onIconChange}
-              onOrderSubmit={onOrderSubmit}
-            />
-          }
-        />
+        {/* Redirect index route to /tables */}
+        <Route index element={<Navigate to="/tables" replace />} />
         <Route
           path="tables"
           element={
@@ -52,16 +42,20 @@ const AppRoutes = ({
               onCheckout={onCheckout}
               onIconChange={onIconChange}
               onOrderSubmit={onOrderSubmit}
+              onStatusChange={onStatusChange}
+              onTimestampChange={onTimestampChange}
+              onNotesChange={onNotesChange}
             />
           }
         />
-        <Route 
-          path="orders" 
+        <Route
+          path="orders"
           element={
             <OrdersPage 
               tables={tables}
-              orders={orders}       // Added
-              menuItems={menuItems} // Added
+              orders={orders}      
+              menuItems={menuItems}
+              onUpdateStatus={onUpdateStatus}
             />
           }
         />
@@ -71,7 +65,7 @@ const AppRoutes = ({
         />
         <Route 
           path="menu" 
-          element={<MenuPage menuItems={menuItems} />} // Added menuItems
+          element={<MenuPage menuItems={menuItems} />}
         />
         <Route path="*" element={<Navigate to="/tables" replace />} />
       </Route>

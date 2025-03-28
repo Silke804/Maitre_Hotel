@@ -52,7 +52,7 @@ const Table = ({ id, size, orders = [], timestamp, notes, icons = [], status, on
       </div>
 
       <div className="size-indicator">
-        {size} people
+        {size}
       </div>
     </div>
   );

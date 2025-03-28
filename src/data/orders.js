@@ -7,6 +7,7 @@ export const initialOrders = [{
         total: 45.50,
         status: 'pending',
         timestamp: '2023-09-20T14:30:00Z',
+        servedTime: null,
         note: ["zonder ajuin"]
     },
     {
@@ -18,6 +19,7 @@ export const initialOrders = [{
         total: 45.50,
         status: 'preparing',
         timestamp: '2023-09-20T14:30:00Z',
+        servedTime: null,
         note: ["zonder ajuin"]
     },
     {
@@ -29,6 +31,7 @@ export const initialOrders = [{
         total: 45.50,
         status: 'served',
         timestamp: '2023-09-20T14:30:00Z',
+        servedTime: null,
         note: ["zonder ajuin"]
     },
     {
@@ -40,6 +43,7 @@ export const initialOrders = [{
         total: 45.50,
         status: 'served',
         timestamp: '2023-09-20T14:30:00Z',
+        servedTime: null,
         note: ["zonder ajuin"]
     },
     {
@@ -51,6 +55,7 @@ export const initialOrders = [{
         total: 45.50,
         status: 'served',
         timestamp: '2023-09-20T14:30:00Z',
+        servedTime: null,
         note: ["zonder ajuin"]
     },
     {
@@ -61,6 +66,7 @@ export const initialOrders = [{
         total: 12.00,
         status: "pending",
         timestamp: "2023-09-20T12:30:00Z",
+        servedTime: null,
         note: ["Extra kaas", "Zonder tomaat", "Met extra olijven"]
     },
     {
@@ -71,6 +77,7 @@ export const initialOrders = [{
         total: 2.50,
         status: "served",
         timestamp: "2023-09-20T12:35:00Z",
+        servedTime: null,
         note: ["Geen ijs"],
     },
     {
@@ -81,6 +88,7 @@ export const initialOrders = [{
         total: 12.00,
         status: "pending",
         timestamp: "2023-09-20T12:30:00Z",
+        servedTime: null,
         note: ["Extra kaas", "Zonder tomaat", "Met extra olijven"]
     },
     {
@@ -91,6 +99,7 @@ export const initialOrders = [{
         total: 2.50,
         status: "served",
         timestamp: "2023-09-20T12:35:00Z",
+        servedTime: null,
         note: ["Geen ijs"]
     },
     {
@@ -101,6 +110,7 @@ export const initialOrders = [{
         total: 12.00,
         status: "pending",
         timestamp: "2023-09-20T12:40:00Z",
+        servedTime: null,
         note: ["Extra kaas", "Zonder tomaat", "Met extra olijven"]
     },
     {
@@ -111,6 +121,7 @@ export const initialOrders = [{
         total: 2.50,
         status: "served",
         timestamp: "2023-09-20T12:45:00Z",
+        servedTime: null,
         note: ["Geen ijs"]
     },
     {
@@ -121,6 +132,7 @@ export const initialOrders = [{
         total: 4.00,
         status: "preparing",
         timestamp: "2023-09-20T12:50:00Z",
+        servedTime: null,
         note: ["Met mayonaise"]
     },
     {
@@ -131,6 +143,7 @@ export const initialOrders = [{
         total: 1.50,
         status: "served",
         timestamp: "2023-09-20T12:55:00Z",
+        servedTime: null,
         note: ["Koud"]
     },
     {
@@ -141,6 +154,7 @@ export const initialOrders = [{
         total: 8.00,
         status: "preparing",
         timestamp: "2023-09-20T13:00:00Z",
+        servedTime: null,
         note: ["Met extra frietjes", "Zonder ui", "Geen tomaat", "Met extra bacon"]
     }
 ];

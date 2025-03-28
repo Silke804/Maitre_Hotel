@@ -1,18 +1,30 @@
 import { useState } from 'react';
-import MenuItem from '../components/Menu/MenuItem.jsx';
+import MenuCategory from '../components/Menu/MenuCategory.jsx';
 import { menuItems } from '../data/menuItems';
 
 const MenuPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Use the flat menuItems array directly.
-  const allItems = menuItems;
-
-  // Filter items based on the search term.
-  const filteredItems = allItems.filter(item =>
+  // Filter items based on the search term
+  const filteredItems = menuItems.filter(item =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Group filtered items by category
+  const groupedCategories = filteredItems.reduce((acc, item) => {
+    const category = item.category;
+    if (!acc[category]) {
+      acc[category] = {
+        name: category,
+        items: []
+      };
+    }
+    acc[category].items.push(item);
+    return acc;
+  }, {});
+
+  const categories = Object.values(groupedCategories);
 
   return (
     <div className="menu-page">
@@ -28,9 +40,12 @@ const MenuPage = () => {
           <i className="fas fa-search"></i>
         </div>
       </div>
-      <div className="menu-grid">
-        {filteredItems.map(item => (
-          <MenuItem key={item.id} item={item} />
+      <div className="menu">
+        {categories.map((category) => (
+          <MenuCategory 
+            key={category.name}
+            category={category}
+          />
         ))}
       </div>
     </div>

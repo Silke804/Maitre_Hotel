@@ -31,6 +31,56 @@ function AppContent() {
     }))
   );
 
+  const handleTimestampChange = (tableId, newTimestamp) => {
+    setTables(prevTables =>
+      prevTables.map(table =>
+        table.id === tableId ? { ...table, timestamp: newTimestamp } : table
+      )
+    );
+  };
+  
+  const handleNotesChange = (tableId, newNotes) => {
+    setTables(prevTables =>
+      prevTables.map(table =>
+        table.id === tableId ? { ...table, notes: newNotes } : table
+      )
+    );
+  };
+
+  const handleUpdateStatus = (orderId, newStatus) => {
+    setOrders(prev => prev.map(order => {
+      if (order.id === orderId) {
+        return {
+          ...order,
+          status: newStatus,
+          ...(newStatus === 'served' && { servedTime: new Date().toISOString() })
+        };
+      }
+      return order;
+    }));
+  };
+  
+  const handleStatusChange = (tableId, newStatus) => {
+    setTables(prevTables =>
+      prevTables.map(table => {
+        if (table.id === tableId) {
+          const updates = { status: newStatus };
+          
+          if (newStatus === 'free') {
+            updates.timestamp = '';
+            updates.notes = '';
+            updates.orders = [];
+          } else if (newStatus === 'occupied') {
+            updates.timestamp = new Date().toISOString();
+          }
+  
+          return { ...table, ...updates };
+        }
+        return table;
+      })
+    );
+  };
+
   const handleTableClick = tableId => {
     setSelectedTable(tables.find(t => t.id === tableId));
     setIsModalOpen(true);
@@ -117,6 +167,10 @@ function AppContent() {
             onIconChange={handleIconChange}
             onOrderSubmit={handleOrderSubmit}
             countBirthdays={countBirthdays}
+            onStatusChange={handleStatusChange}
+            onTimestampChange={handleTimestampChange}
+            onNotesChange={handleNotesChange}
+            onUpdateStatus={handleUpdateStatus}
           />
         </BrowserRouter>
       </ErrorBoundary>
