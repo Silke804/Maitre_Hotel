@@ -2,7 +2,7 @@ export const menuItems = [{
         id: "1",
         name: "Soep van de dag",
         description: "Soep van de dag",
-        price: 12.50,
+        price: 7.50,
         category: "voorgerecht",
         image: "images/soep.jpg",
         isVegetarian: true,

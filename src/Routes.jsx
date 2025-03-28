@@ -22,12 +22,11 @@ const AppRoutes = ({
   onStatusChange,
   onTimestampChange,
   onNotesChange,
-  onUpdateStatus
+  onUpdateStatus,
 }) => {
   return (
     <Routes>
       <Route element={<DashboardLayout tables={tables} orders={orders} />}>
-        {/* Redirect index route to /tables */}
         <Route index element={<Navigate to="/tables" replace />} />
         <Route
           path="tables"
@@ -45,6 +44,7 @@ const AppRoutes = ({
               onStatusChange={onStatusChange}
               onTimestampChange={onTimestampChange}
               onNotesChange={onNotesChange}
+              menuItems={menuItems}
             />
           }
         />
@@ -61,7 +61,12 @@ const AppRoutes = ({
         />
         <Route
           path="bills"
-          element={<BillsPage bills={bills} setBills={setBills} />}
+          element={
+          <BillsPage 
+            bills={bills} 
+            setBills={setBills} 
+            />
+          }
         />
         <Route 
           path="menu" 

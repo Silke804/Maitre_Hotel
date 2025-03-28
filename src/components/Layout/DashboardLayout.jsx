@@ -14,7 +14,7 @@ const DashboardLayout = ({ tables, orders }) => {
             tables={tables}
             orders={orders}
           />
-          <Outlet /> {/* Replace children with Outlet */}
+          <Outlet />{/*Renders the matching child route of a parent route or nothing if no child route matches.*/}
         </main>
       </div>
     </div>

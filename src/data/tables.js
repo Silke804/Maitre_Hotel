@@ -1,7 +1,6 @@
 export const tables = [{
         id: "1",
         size: 5,
-        orders: ["1"],
         timestamp: '2023-09-20T14:30:00Z',
         notes: "Verjaardag van John",
         icons: [],
@@ -9,8 +8,7 @@ export const tables = [{
     },
     {
         id: "2",
-        size: 5,
-        orders: ["2"],
+        size: 3,
         timestamp: '2023-09-20T14:30:00Z',
         notes: "🎂 Verjaardag (25 jaar)",
         icons: [],
@@ -18,8 +16,7 @@ export const tables = [{
     },
     {
         id: "3",
-        size: 5,
-        orders: ["3"],
+        size: 2,
         timestamp: '2023-09-20T14:30:00Z',
         notes: "Gereserveerd voor een zakelijke lunch",
         icons: [],
@@ -27,17 +24,15 @@ export const tables = [{
     },
     {
         id: "4",
-        size: 5,
-        orders: ["4"],
+        size: 8,
         timestamp: '2023-09-20T14:30:00Z',
-        notes: "Lente Festival",
+        notes: "",
         icons: [],
         status: "free"
     },
     {
         id: "5",
-        size: 5,
-        orders: ["5"],
+        size: 2,
         timestamp: '2023-09-20T14:30:00Z',
         notes: "Gereserveerd voor 4 personen, verjaardag",
         icons: [],
@@ -45,8 +40,7 @@ export const tables = [{
     },
     {
         id: "6",
-        size: 5,
-        orders: ["6"],
+        size: 4,
         timestamp: '2023-09-20T14:30:00Z',
         notes: "Gereserveerd voor een romantisch diner",
         icons: [],
@@ -54,8 +48,7 @@ export const tables = [{
     },
     {
         id: "7",
-        size: 5,
-        orders: ["7"],
+        size: 6,
         timestamp: '2023-09-20T14:30:00Z',
         notes: "🌶️ Super spicy",
         icons: [],
@@ -63,26 +56,23 @@ export const tables = [{
     },
     {
         id: "8",
-        size: 5,
-        orders: ["8"],
+        size: 12,
         timestamp: '2023-09-20T14:30:00Z',
-        notes: "Gereserveerd voor 6 personen, geen gluten",
+        notes: "Gereserveerd voor 12 personen, geen gluten",
         icons: [],
         status: "reserved"
     },
     {
         id: "9",
-        size: 5,
-        orders: ["9"],
+        size: 16,
         timestamp: '2023-09-20T14:30:00Z',
-        notes: "Gezond en lekker",
+        notes: "",
         icons: [],
         status: "free"
     },
     {
         id: "10",
         size: 5,
-        orders: ["10"],
         timestamp: '2023-09-20T14:30:00Z',
         notes: "Mexicaanse fiesta",
         icons: [],
@@ -90,11 +80,18 @@ export const tables = [{
     },
     {
         id: "11",
-        size: 5,
-        orders: ["11"],
+        size: 6,
         timestamp: '2023-09-20T14:30:00Z',
         notes: "Italiaans diner",
         icons: [],
         status: "reserved"
-    }
+    },
+    {
+        id: "12",
+        size: 2,
+        timestamp: '2023-09-20T14:30:00Z',
+        notes: "",
+        icons: [],
+        status: "free"
+    },
 ];

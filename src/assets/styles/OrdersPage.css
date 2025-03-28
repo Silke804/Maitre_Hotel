@@ -1,4 +1,3 @@
-/* Modern color scheme */
 :root {
   --primary: #2d3436;
   --secondary: #636e72;
@@ -220,7 +219,6 @@
   font-size: 0.8em;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
   .order-main {
     grid-template-columns: 1fr;
@@ -245,11 +243,13 @@
 }
 
 
-/* Add these new styles */
 .order-columns-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
   height: calc(100vh - 150px);
 }
 
@@ -260,6 +260,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  min-width: 500px;
 }
 
 .order-column.pending {
@@ -293,8 +294,8 @@
 }
 
 .empty-column {
-  text-align: center;
   padding: 2rem;
+  text-align: center;
   color: var(--secondary);
 }
 
@@ -373,9 +374,9 @@
 
 .order-item {
   overflow: visible !important; /* Ensure button isn't clipped */
-  padding-bottom: 4rem !important; /* More space for button */
+  padding-bottom: 4rem !important;
 }
 
 .scrollable-orders {
-  gap: 1.5rem; /* Add space between order items */
+  gap: 1.5rem;
 }

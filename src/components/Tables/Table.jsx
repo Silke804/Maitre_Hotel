@@ -5,14 +5,31 @@ import '../../assets/styles/Table.css';
 import { formatTime } from '../../utils/helpers';
 
 const Table = ({ id, size, orders = [], timestamp, notes, icons = [], status, onTableClick }) => {
+  const hasPendingOrders = orders.some(order =>
+    order.status !== 'served' && order.tableId === id
+  );
+
   return (
     <div
       className={`table ${status}`}
       onClick={() => onTableClick(id)}
       data-size={size}
     >
+      {hasPendingOrders && (
+        <span
+          className="icon"
+          style={{
+            position: 'absolute',
+            top: '5px',
+            right: '5px',
+            fontSize: '24px'
+          }}
+        >
+          📝
+        </span>
+      )}
       <div className="number">#{id}</div>
-      
+
       <div className="status-info">
         {status === 'occupied' && (
           <div className="occupied-info">
@@ -35,20 +52,22 @@ const Table = ({ id, size, orders = [], timestamp, notes, icons = [], status, on
       </div>
 
       <div className="icon-container">
-        {icons.map((icon, index) => (
-          <span 
-            key={`${icon}-${index}`}
-            className="icon"
-            style={{ 
-              position: 'absolute',
-              top: `${5 + index * 30}px`,
-              right: '5px',
-              fontSize: '24px'
-            }}
-          >
-            {icon}
-          </span>
-        ))}
+        {icons
+          .filter(icon => icon !== '📝') // order icon is not manual
+          .map((icon, index) => (
+            <span
+              key={`${icon}-${index}`}
+              className="icon"
+              style={{
+                position: 'absolute',
+                top: `${5 + index * 30}px`,
+                right: '5px',
+                fontSize: '24px'
+              }}
+            >
+              {icon}
+            </span>
+          ))}
       </div>
 
       <div className="size-indicator">

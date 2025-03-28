@@ -1,0 +1,94 @@
+.checkout-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .checkout-popup-container {
+    background: white;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 1.5rem;
+  }
+  
+
+  .checkout-popup-container h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #2c3e50;
+    text-align: center;
+  }
+  
+  
+  .checkout-summary {
+    margin: 1rem 0;
+  }
+  
+  .checkout-order-line {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 1rem;
+    color: #1e293b;
+  }
+  
+  .checkout-order-line:last-child {
+    border-bottom: none;
+  }
+  
+  .checkout-total {
+    text-align: right;
+    font-size: 1.25rem;
+    margin-top: 1rem;
+    font-weight: bold;
+    color: #2c3e50;
+  }
+  
+  
+  .checkout-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  /* Button Styles */
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+  }
+  
+  .confirm-btn {
+    background-color: #2c3e50;
+    color: white;
+  }
+  
+  .confirm-btn:hover {
+    background-color: #1e293b;
+  }
+  
+  .cancel-btn {
+    background-color: #e53e3e;
+    color: white;
+  }
+  
+  .cancel-btn:hover {
+    background-color: #c53030;
+  }
+  

@@ -4,13 +4,14 @@ import '../assets/styles/OrdersPage.css';
 
 const OrdersPage = ({ orders, menuItems, onUpdateStatus }) => {
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  
   const getMenuItemName = (id) => {
     const item = menuItems.find(m => m.id === id);
     return item?.name || 'Onbekend item';
   };
 
   const handleSelectOrder = (orderId) => {
-    setSelectedOrderId(orderId);
+    setSelectedOrderId(orderId === selectedOrderId ? null : orderId);
   };
 
   const formatTime = (isoString) => {
@@ -26,13 +27,12 @@ const OrdersPage = ({ orders, menuItems, onUpdateStatus }) => {
     if (!acc[order.status]) acc[order.status] = [];
     acc[order.status].push(order);
     return acc;
-  }, { pending: [], preparing: [], served: [] });
+  }, { pending: [], preparing: [] });
 
-  // Sort orders by timestamp (oldest first for pending/preparing, newest first for served)
+  // Sort orders by timestamp
   const sortedOrders = {
     pending: [...categorizedOrders.pending].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)),
-    preparing: [...categorizedOrders.preparing].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)),
-    served: [...categorizedOrders.served].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+    preparing: [...categorizedOrders.preparing].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
   };
 
   return (
@@ -64,17 +64,6 @@ const OrdersPage = ({ orders, menuItems, onUpdateStatus }) => {
           onUpdateStatus={onUpdateStatus}
           allowedNextStatus="served"
           actionLabel="Markeer als Geserveerd 🚀"
-        />
-        
-        <OrderColumn
-          title="Geserveerd"
-          orders={sortedOrders.served}
-          status="served"
-          onSelectOrder={handleSelectOrder}
-          selectedOrderId={selectedOrderId}
-          getMenuItemName={getMenuItemName}
-          formatTime={formatTime}
-          onUpdateStatus={onUpdateStatus}
           showTableNumber={true}
         />
       </div>

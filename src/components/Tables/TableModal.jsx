@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import OrderPopup from '../Orders/OrderPopup';
+import CheckoutPopup from './CheckoutPopup';
 import PropTypes from 'prop-types';
 import '../../assets/styles/TablesPage.css';
 import '../../assets/styles/Table.css';
 import { formatTime } from '../../utils/helpers';
 
 const TableModal = ({
+  menuItems,
   isOpen,
   tables,
   tableId,
@@ -17,29 +19,36 @@ const TableModal = ({
   onStatusChange,
   onTimestampChange,
   onNotesChange,
-  orders = []
+  orders
 }) => {
   const navigate = useNavigate();
   const [showOrderPopup, setShowOrderPopup] = useState(false);
+  const [showCheckoutPopup, setShowCheckoutPopup] = useState(false);
   const tableData = tables.find(t => t.id === tableId) || {};
 
   if (!tableData || !isOpen) return null;
 
-  const filteredOrders = tableData?.orders
-    ? orders.filter(order =>
-      tableData.orders.includes(order.id) &&
-      order.tableId === tableData.id
-    )
-    : [];
+  const filteredOrders = orders.filter(order =>
+    String(order.tableId) === String(tableData.id)
+  );
 
   const { id, size, timestamp, notes, icons = [], status } = tableData;
 
-
   const totalItems = filteredOrders.reduce((sum, order) => sum + order.quantity, 0);
+  const totalPrice = filteredOrders.reduce((sum, order) => {
+    const menuItem = menuItems.find(item => item.id === order.menuItemId);
+    return sum + (menuItem?.price || 0) * order.quantity;
+  }, 0);
 
-  const handleCheckoutAndNavigate = () => {
+
+  const handleConfirmCheckout = () => {
     onCheckout(tableData.id);
+    setShowCheckoutPopup(false);
     navigate('/bills');
+  };
+
+  const handleCheckoutClick = () => {
+    setShowCheckoutPopup(true);
   };
 
   const handleOrderSubmit = (items) => {
@@ -53,7 +62,6 @@ const TableModal = ({
   const handleStatusChange = (newStatus) => {
     onStatusChange(tableId, newStatus);
   };
-
 
   return (
     <div className="modal-overlay">
@@ -116,17 +124,24 @@ const TableModal = ({
             </div>
             <div className="order-summary">
               <h3>Huidige Bestelling ({totalItems} items)</h3>
-              {filteredOrders?.map(order => (
-                <div key={order?.id} className="order-line">
-                  <span>
-                    {order?.quantity || 0}x {order?.menuItemId || 'Unknown Item'}
-                  </span>
-                  <span>
-                    €{(order?.total * order?.quantity || 0).toFixed(2)}
-                  </span>
-                </div>
-              ))}
+              {filteredOrders.map(order => {
+                const menuItem = menuItems.find(item => item.id === order.menuItemId);
+                const itemName = menuItem ? menuItem.name : 'Unknown Item';
+                const itemPrice = menuItem?.price || 0;
+
+                return (
+                  <div key={order.id} className="order-line">
+                    <span>
+                      {order.quantity}x {itemName}
+                    </span>
+                    <span>
+                      €{(itemPrice * order.quantity).toFixed(2)}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
+
           </div>
 
           <div className="icon-controls">
@@ -146,14 +161,6 @@ const TableModal = ({
               />
               <span className="toggle-button allergy">⚠️ Allergie</span>
             </label>
-            <label className="icon-toggle">
-              <input
-                type="checkbox"
-                checked={icons.includes('📝')}
-                onChange={(e) => onIconChange(tableId, '📝', e.target.checked)}
-              />
-              <span className="toggle-button ordered">📝 Besteld</span>
-            </label>
           </div>
         </div>
 
@@ -161,7 +168,7 @@ const TableModal = ({
           <button className="btn order-btn" onClick={() => setShowOrderPopup(true)}>
             <i className="fas fa-utensils"></i> Bestel
           </button>
-          <button className="checkout-btn" onClick={handleCheckoutAndNavigate}>
+          <button className="checkout-btn" onClick={handleCheckoutClick}>
             <i className="fas fa-cash-register"></i> Afrekenen
           </button>
         </div>
@@ -174,12 +181,23 @@ const TableModal = ({
           onOrderSubmit={handleOrderSubmit}
         />
       )}
+
+      {showCheckoutPopup && (
+        <CheckoutPopup
+          orders={filteredOrders}
+          totalPrice={totalPrice}
+          menuItems={menuItems}
+          onConfirm={handleConfirmCheckout}
+          onCancel={() => setShowCheckoutPopup(false)}
+        />
+      )}
     </div>
   );
 };
 
 TableModal.propTypes = {
   tables: PropTypes.array.isRequired,
+  menuItems: PropTypes.array.isRequired,
   onOrderSubmit: PropTypes.func.isRequired,
   orders: PropTypes.array.isRequired,
   onIconChange: PropTypes.func.isRequired,

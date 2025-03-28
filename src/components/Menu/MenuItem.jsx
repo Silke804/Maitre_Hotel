@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import '../../assets/styles/MenuItem.css';
 
 const MenuItem = ({ item }) => {
-  // Format price with Dutch locale
+  // Formatting
   const formattedPrice = item.price.toLocaleString('nl-NL', {
     style: 'currency',
     currency: 'EUR',

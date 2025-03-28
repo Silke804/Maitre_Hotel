@@ -1,5 +1,3 @@
-/* Table Card */
-
 .table {
     position: relative;
     background: white;
@@ -86,7 +84,6 @@
     background: #2196F3;
   }
   
-  /* Adjust modal header layout */
   .modal-header {
     display: flex;
     justify-content: space-between;
@@ -106,7 +103,7 @@
   }
 
   .modal-container {
-    width: 700px; /* Fixed wider width */
+    width: 700px; 
     min-height: 400px;
     max-width: 90vw; /* Ensure it stays within viewport */
     display: flex;
@@ -172,9 +169,6 @@
 
 /* Icons Container */
 
-
-/* Replace .icon styles with */
-
 .icon-container {
     position: absolute;
     top: 10px;
@@ -193,9 +187,6 @@
 .icon:hover {
     transform: scale(1.2);
 }
-
-
-/* Remove background from existing .icon styles */
 
 .icon {
     background: transparent !important;
@@ -224,9 +215,9 @@
     content: '👥';
 }
 
-/* Add to Table.css */
+
 .time-input-wrapper {
-  max-width: 220px; /* Maximum width for the container */
+  max-width: 220px;
 }
 
 
@@ -266,7 +257,7 @@
 }
 
 .compact-time-input {
-  width: 200px; /* Fixed width */
+  width: 200px;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -283,7 +274,7 @@
 .time-input-container {
   display: flex;
   align-items: center;
-  min-height: 40px; /* Match other info items */
+  min-height: 40px;
 }
 
 .info-item {
@@ -295,7 +286,6 @@
   grid-column: 1 / -1;
 }
 
-/* Ensure consistent alignment */
 .info-value {
   display: flex;
   align-items: center;

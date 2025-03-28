@@ -1,4 +1,3 @@
-// components/Layout/Sidebar.jsx
 import { NavLink } from 'react-router-dom';
 
 const Sidebar = () => {

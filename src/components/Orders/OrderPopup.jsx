@@ -42,7 +42,7 @@ const OrderPopup = ({ tableId, onClose, onOrderSubmit }) => {
           total: menuItem.price * quantity,
           status: 'pending',
           timestamp: new Date().toISOString(),
-          note: note.trim() ? [note.trim()] : [] // Store note in array
+          note: note.trim() ? [note.trim()] : [] // Store note in array so we can have multiple
         } : null;
       })
       .filter(Boolean);

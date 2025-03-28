@@ -14,7 +14,9 @@ const TablesPage = ({
   onOrderSubmit,
   onStatusChange,
   onTimestampChange,
-  onNotesChange
+  onNotesChange,
+  orders,
+  menuItems
 }) => {
   return (
     <div className="tables-page">
@@ -26,7 +28,9 @@ const TablesPage = ({
             id={table.id}
             size={table.size}
             status={table.status}
-            orders={table.orders}
+            orders={orders.filter(order => 
+              String(order.tableId) === String(table.id)
+            )}
             timestamp={table.timestamp}
             notes={table.notes}
             icons={table.icons}
@@ -47,6 +51,8 @@ const TablesPage = ({
           tableId={selectedTable?.id}
           onTimestampChange={onTimestampChange}
           onNotesChange={onNotesChange}
+          orders={orders}
+          menuItems={menuItems}
         />
       )}
     </div>

@@ -1,18 +1,16 @@
 import React from 'react';
 
 const StatusBar = ({ tables, orders }) => {
-  // Occupied tables count
   const occupiedCount = tables.filter(table => table.status === 'occupied').length;
   const totalTables = tables.length;
 
-  // Orders in preparation (status: pending/preparing)
   const ordersInPreparation = orders.filter(order => 
     ['pending', 'preparing'].includes(order.status)
   ).length;
 
-  // Birthdays (using table notes instead of icons)
+
   const birthdaysToday = tables.filter(table => 
-    table.notes?.toLowerCase().includes('verjaardag')
+    table.icons.includes('🎂')
   ).length;
 
   return (

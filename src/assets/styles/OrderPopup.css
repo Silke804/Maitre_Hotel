@@ -118,7 +118,6 @@
     justify-content: flex-end;
     gap: 10px;
     background: white;
-    /* Optional: Add slight shadow if content scrolls behind */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
   }
   
